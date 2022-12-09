@@ -469,7 +469,7 @@
                 <div class="toc">
                   <ul>
                     <li>
-                      <a href="#">Instructions</a>
+                      <a href="#vfpu-instr">VFPU Instructions</a>
                       <ul>
                         % for instr in instr_list:
                         <li>
@@ -494,7 +494,7 @@
                   <div class="pagebreak"></div>
                 % endfor
 
-                <h1>Instructions</h1>
+                <h1 id="vfpu-instr">VFPU Instructions</h1>
                 % for instr in instr_list:
                     <h2 id="${instr["name"]}">${instr["name"]}</h2>
                     <p class="inst-title">${instr["title"]}</p>

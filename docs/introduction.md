@@ -11,6 +11,23 @@ every functional detail described in the docs must have a test that
 validates it. Of course some things are harder to validate (like hardware bugs)
 so there's some statements that won't have tests for them at this time.
 
+## MIPS allegrex CPU
+
+The Allegrex CPU is a MIPS CPU based on the `MIPS II` architecture. This is a
+32 bit CPU and architecture that has many similarities with other CPUs of the
+same architecture. However, if we only focus on the instruction set, the main
+differences with other CPUs in the `MIPS II` family would be:
+
+ - Lack of 64 bit FPU support (only single float support).
+ - Lack of MMU/TLB (only certain memory protections are available).
+ - Some extra MIPS32r2 instructions (mostly arithmetic and bit manipulation).
+ - Other COP0 instructions, some borrowed from MIPS32
+ - Lack of _Coprocessor 3_ and custom _Coprocessor 2_ (VFPU)
+
+Most of the extra instructions that are present in the CPU are identical to
+their MIPS32 counterparts. In some cases though, the encoding is slightly
+different.
+
 
 ## VFPU unit
 
@@ -397,5 +414,54 @@ throughput. The advantage of using prefixes is that latency is kept low (since
 they have no latency and the extra operation is "included" in the instruction
 pipeline).
 
+
+# Allegrex Instructions
+
+## Bit manipulation instructions
+
+The following instructions exist in the Allegrex CPU and share the same MIPS32
+encodings:
+
+ - *seb*: Sign extend byte (byte to word signed extension)
+ - *seh*: Sign extend half-word (half-word to word signed extension)
+ - *ext*: Extract bit field (extract a bit field in a zeroed register)
+ - *ins*: Insert bit field (insert lower bits into another register)
+ - *wsbh*: Swap bytes within a half-word
+
+Other instructions that are borrowed from MIPS32 but have a different encoding
+are:
+
+ - *clo*: Count leading ones (uses some unused `SPECIAL` encodings)
+ - *clz*: Count leading zeros (uses some unused `SPECIAL` encodings)
+
+The bit manipulation Allegrex specific instructions are:
+
+ - *wsbw*: Swap bytes in word (uses `BSHFL` encoding adjacent to `wsbh`)
+ - *bitrev*: Reverse bits in a word (uses unused `BSHFL` encoding)
+
+## Arithmetic-Logical instructions
+
+Allegrex features some instructions present in MIPS32 and MIPS32r2 with
+identical encoding to these:
+
+ - *rotr*: Rotate word right by a fixed amount
+ - *rotrv*: Rotate word right by a variable amount
+ - *movz*: Conditional register move on zero
+ - *movn*: Conditional register move on non-zero
+
+Other instructions that have some particular encoding are multiply-accumulate
+instructions. Some overlap with `MIPS R4010` encodings and some others just use
+unused encodings. They all use unused `SPECIAL` opcodes:
+
+ - *madd*: Signed multiply-accumulate integer
+ - *maddu*: Unsigned multiply-accumulate integer
+ - *msub*: Signed multiply-subtract integer
+ - *msubu*: Unsigned multiply-subtract integer
+
+There's also two novel Allegrex instructions that are used to perform faster
+compare-and-move operations. These use free `SPECIAL` opcodes as well:
+
+ - *min*: Selects smallest (signed) value between two registers.
+ - *max*: Selects greatest (signed) value between two registers.
 
 

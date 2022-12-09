@@ -33,6 +33,7 @@ int validate_ccregs(struct check_error_info *);
 int assert_vhtfm_bugs(struct test_error_info *);
 int check_unaligned_vfpu_load_bug(struct check_error_info *errs, int is_fat);
 int check_unaligned_vfpu_memops(struct check_error_info *errs);
+int check_allegrex_insts(struct check_error_info *errs);
 
 unsigned read_vfpu_cc_reg() {
 	unsigned ret;
@@ -78,8 +79,10 @@ int main() {
 	// Disable division exceptions to compare easily
 	pspFpuSetEnable(0);
 
+	// Check MIPS allegrex instructions
+	int checkcnt = check_allegrex_insts(check_info);
 	// Run validation tests for CC
-	int checkcnt = validate_ccregs(check_info);
+	checkcnt += validate_ccregs(&check_info[checkcnt]);
 	// Validate regular functioning of VFPU unaligned instructions
 	checkcnt += check_unaligned_vfpu_memops(&check_info[checkcnt]);
 	// Validate memops silicon bugs on FAT models

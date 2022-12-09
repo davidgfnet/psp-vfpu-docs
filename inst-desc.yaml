@@ -368,9 +368,9 @@ encodings:
 
   vfpu-branch:
     # A branch instruction that uses the VFPU CC register as input.
-    encoding: "ooooooooo00rrrlvffffffffffffffff"
+    encoding: "ooooooooooorrrlvffffffffffffffff"
     fields:
-      o: opcode      # 9 bit (6 + 3) opcode
+      o: opcode      # 11 bit (6 + 5) opcode
       r: vfpucc      # VFPU CC bit number
       l: likely      # likely bit
       v: value       # value to branch on
@@ -408,7 +408,7 @@ instructions:
     perf-class: vfpu-branch
     title: "VFPU branch on false"
     description: "Branch on VFPU CC register being false"
-    opcode: "010010010"
+    opcode: "01001001000"
     likely: 0
     value: 0
 
@@ -418,7 +418,7 @@ instructions:
     perf-class: vfpu-branch
     title: "VFPU likely branch on false"
     description: "Branch on VFPU CC register being false (likely)"
-    opcode: "010010010"
+    opcode: "01001001000"
     likely: 1
     value: 0
 
@@ -428,7 +428,7 @@ instructions:
     perf-class: vfpu-branch
     title: "VFPU branch on true"
     description: "Branch on VFPU CC register being true"
-    opcode: "010010010"
+    opcode: "01001001000"
     likely: 0
     value: 1
 
@@ -438,7 +438,7 @@ instructions:
     perf-class: vfpu-branch
     title: "VFPU likely branch on true"
     description: "Branch on VFPU CC register being true (likely)"
-    opcode: "010010010"
+    opcode: "01001001000"
     likely: 1
     value: 1
 
