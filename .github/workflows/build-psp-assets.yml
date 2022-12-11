@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Build PSP EBOOT.PBP tests
-        run: make psptests-clean && make psptests
+        run: make psptests-clean && make -j $(getconf _NPROCESSORS_ONLN) psptests
       - name: Package assets
         run: make psptests-pbp-pack
       - name: Upload assets
