@@ -1,0 +1,12 @@
+jobs:
+  docs-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get install -y python3-pip python3-mako python3-markdown python3-htmlmin weasyprint make
+          sudo pip3 install tatsu
+      - name: Build documentation
+        run: make docs
+
+
