@@ -15,7 +15,7 @@ docs:
 	mkdir -p docs/output/
 	rm -f docs/output/index.html && ./gen-docs.py --format=html --output=docs/output/index.html
 	rm -f docs/output/pdf_doc.html && ./gen-docs.py --format=pdf --output=docs/output/pdf_doc.html
-	weasyprint docs/output/pdf_doc.html docs/output/docs.pdf
+	weasyprint docs/output/pdf_doc.html docs/output/docs.pdf && rm -f docs/output/pdf_doc.html
 
 .PHONY: tests
 tests:
