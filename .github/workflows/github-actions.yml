@@ -10,6 +10,7 @@ jobs:
           sudo apt-get install -y python3-pip python3-mako python3-markdown python3-htmlmin weasyprint make
           sudo pip3 install tatsu
       - name: Build documentation
+        uses: actions/checkout@v3
         run: make docs
 
 
