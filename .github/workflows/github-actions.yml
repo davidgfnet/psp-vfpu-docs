@@ -1,3 +1,6 @@
+name: Documentation build
+run-name: Build and deploy HTML and PDF documentation
+on: [push]
 jobs:
   docs-build:
     runs-on: ubuntu-latest
