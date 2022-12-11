@@ -54,5 +54,11 @@ psptests-clean:
 
 .PHONY: psptests-pbp-pack
 psptests-pbp-pack:
-	rm -f tests-release.zip && zip -r tests-release.zip psp-tests/{manual,functional,accuracy,performance,regcompat}/EBOOT.PBP
+	rm -f tests-release.zip
+	zip -r tests-release.zip \
+		psp-tests/manual/EBOOT.PBP \
+		psp-tests/functional/EBOOT.PBP \
+		psp-tests/accuracy/EBOOT.PBP \
+		psp-tests/performance/EBOOT.PBP \
+		psp-tests/regcompat/EBOOT.PBP
 
