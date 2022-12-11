@@ -5,6 +5,12 @@ on:
   push:
     branches: ["master"]
 
+# Allow gh-pages updates
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   docs-build:
     runs-on: ubuntu-latest
