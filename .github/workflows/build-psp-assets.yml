@@ -1,0 +1,24 @@
+name: Generate PSP tests
+run-name: Build PSP tests using the PSP toolchain
+
+on: [push]
+
+jobs:
+  generate-tests:
+    runs-on: ubuntu-latest
+    container: pspdev/pspdev:latest
+
+    steps:
+      - name: Install dependencies
+        run: apk add build-base git bash
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Build PSP EBOOT.PBP tests
+        run: make psptests-clean && make psptests
+      - name: Package assets
+        run: make psptests-pbp-pack
+      - name: Upload assets
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: tests-release.zip
+
