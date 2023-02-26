@@ -245,7 +245,8 @@ how the hardware performs the operations internally: the VFPU can perform most
 vector-vector operations in a native way, but matrix operations seem to be
 decomposed into series of vector-vector operations (ie. a vmmul seems to be
 a sequence of vtfm operations). Since the results are only partial, the inputs
-are overwritten before the CPU even read them, causing incorrect operations.
+are overwritten before the CPU can even read them, causing incorrect results
+for the operation.
 
 The affected instructions are divided in two groups, a group that does not
 allow any sort of overlap, and another group that allows some limited overlap.
@@ -260,9 +261,9 @@ vrexp2, vlog2, vsqrt, vrsq, vrcp, vnrcp, vdiv, vmscl and vmmov. Single versions
 (.s) are not affected by this restriction. These instructions are also
 internally decomposed into a bunch of smaller operations (for instance
 trigonometric operations are decomposed into a series of single (.s)
-operations). The registers are allowed to overlap as long as they are cover the
-same element set in the same "direction" (ie. a matrix must be read using the
-same mode).
+operations). The registers are allowed to overlap as long as they are
+compatible in terms of element count and access "direction" (ie. a matrix must
+be read using the same mode).
 
 
 *Examples*
@@ -295,19 +296,20 @@ See the `ieee754-fun.c` file for tests.
 
 
 The VFPU is a pipelined CPU with an issue width of one. That means that
-instructions take multiple cycles to executed, since they execute partially
+instructions take multiple cycles to execute, since they execute partially
 during each cycle, and a maximum of one new instruction begins execution
 each cycle. Instructions that block the pipeline for more than one cycle
 can be identified by having a throughput different than one. These block the
 pipeline for a certain number of cycles before a new instruction can enter
 it.
 
-An instruction usually begins executing whenever its inputs are `ready`,
-that means, any previous instruction producing those registers have completed
-their execution. For this reason it is important to notice the instruction
-latency, measured in cycles, since an instruction might have to wait for its
-inputs to become available. A usual strategy is to interleave non-dependant
-instructions to `hide` latency and avoid wasting CPU cycles.
+An instruction usually begins executing whenever its input registers are
+`ready`, that is, any previous instruction writing those registers have fully
+completed their execution. For this reason it is important to closely observe
+the instruction latency, measured in cycles, since an instruction might have
+to wait for its inputs to become available, reducing efficiency. A common
+strategy is to interleave non-dependant instructions to `hide` latency and
+avoid wasting CPU cycles.
 
 The pipeline structure looks more or less as follows:
 
@@ -324,10 +326,10 @@ the actual instruction operation and some other operations on the output.
 ### Prefix operations
 
 VFPU operations can operate on one or two inputs (`rs` and `rt`) and one
-output (`rd`). The values being read from the inputs can be affected by
-using the `VFPU_PFXS` and `VFPU_PFXT` registers (and therefore `vpfxs` and
-`vpfxt` instructions). The result of the operation being written to `rd` can
-be modified by using the `VFPU_PFXD` register (`vpfxd` instruction).
+output (`rd`). The input values can be pre-processed by using the `VFPU_PFXS`
+and `VFPU_PFXT` registers (and therefore `vpfxs` and `vpfxt` instructions).
+The result of the operation being written to `rd` can be post-processed by
+using the `VFPU_PFXD` register (`vpfxd` instruction).
 
 Valid operations for input registers are:
 
@@ -336,7 +338,7 @@ Valid operations for input registers are:
  - Swizzle (rearranging elments in a row/col)
  - Override element with constant value.
 
-For the output register the following operations are available:
+Operations available to the output register post-processing are:
 
  - Value clamping (to ranges 0..1 or -1..1)
  - Write masking (disable register write)

@@ -26,16 +26,16 @@ tests and examples in `psp-tests/manual/vfpu-bugs.c`
 
 ## ulv.q (lvl.q / lvr.q) register corruption
 
-The instructions lvl.q and lvr.q (usually expanded under the ulv.q macro) have
-a bug in PSP 1000 model (fixed in model 2000 and all later models). The bug
-causes register corruption to the FPU register bank (that is, Coprocessor 1,
-totally unrelated to the VFPU) whenever either instruction is executed.
+In PSP 1000 devices, the lvl.q and lvr.q instructions (which are usually
+expanded from ulv.q macros) present a bug (fixed in 2000 and later models).
+When any of these instructions is executed, the CPU corrupts the FPU register
+bank (that is, Coprocessor 1, which is unrelated to the VFPU).
 
-The bug seems to be trigger a FPU register write whenever the instruction is
-executed. The value being written is apparently whatever value was left in the
-coprocessor bus (thus in incidental cases causing no corruption if both values
-are identical). The bus seems to be used by mfc1/mtc1 and some other COP1
-instructions.
+The bug causes an unexpected write to an FPU register whenever the instruction
+is executed. The value being written is apparently whatever value was left in
+the  coprocessor bus (which in some incidental cases causing no corruption if
+the previous and new values are identical). The bus seems to be used by
+mfc1/mtc1 and some other COP1 instructions.
 
 The corrupted register is deterministic, its value is derived from the
 VFPU destination register. The lowest 5 bits of the register indicate the FPU
